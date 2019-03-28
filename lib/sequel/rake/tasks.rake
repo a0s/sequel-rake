@@ -5,7 +5,7 @@ namespace Sequel::Rake.get(:namespace) do
   unless Rake::Task.task_defined?('sequel:environment')
     task :environment
   end
-  
+
   desc "Creates the migrations directory"
   task :init => :environment do
     FileUtils::mkdir_p migrations
@@ -58,7 +58,12 @@ namespace Sequel::Rake.get(:namespace) do
   end
 
   def connection
-    @connection ||= Sequel.connect(Sequel::Rake.get(:connection))
+    @connection ||=
+      if Sequel::Rake.get(:connection).is_a?(Sequel::Database)
+        Sequel::Rake.get(:connection)
+      else
+        Sequel.connect(Sequel::Rake.get(:connection))
+      end
   end
 
   def migrations

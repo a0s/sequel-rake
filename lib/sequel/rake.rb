@@ -32,7 +32,7 @@ module Sequel
 
       def get(key)
         value = configuration.fetch(key)
-        return value.call if value.respond_to?(:call)
+        return value.call if value.is_a?(Proc)
         value
       end
 
